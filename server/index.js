@@ -21,4 +21,30 @@ app.get('/', (req, res) => {
 
 const port = process.env.PORT || 4545
 
+let students = []
+
+app.post('/api/student', (req, res)=>{
+    let {name} = req.body
+    name = name.trim()
+
+    students.push(name)
+
+    res.status(200).send(students)
+})
+
+// Now let's add some rollbar functionality to log info and track errors. In your post function add a rollbar log:
+app.post('/api/student', (req, res)=>{
+    let {name} = req.body
+    name = name.trim()
+
+    students.push(name)
+
+    rollbar.log('Student added successfully', {author: 'Scott', type: 'manual entry'})
+
+    res.status(200).send(students)
+})
+
+// Let's also add some top-level middleware that will track any errors that occur in our server:
+app.use(rollbar.errorHandler())
+
 app.listen(port, () => console.log(`Take us to warp ${port}!`))
