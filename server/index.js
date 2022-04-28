@@ -19,16 +19,15 @@ app.get('/', (req, res) => {
     rollbar.info('html file served successfully.')
 })
 
-const port = process.env.PORT || 4545
 
 let students = []
 
 app.post('/api/student', (req, res)=>{
     let {name} = req.body
     name = name.trim()
-
+    
     students.push(name)
-
+    
     res.status(200).send(students)
 })
 
@@ -36,15 +35,17 @@ app.post('/api/student', (req, res)=>{
 app.post('/api/student', (req, res)=>{
     let {name} = req.body
     name = name.trim()
-
+    
     students.push(name)
-
+    
     rollbar.log('Student added successfully', {author: 'Scott', type: 'manual entry'})
-
+    
     res.status(200).send(students)
 })
 
 // Let's also add some top-level middleware that will track any errors that occur in our server:
 app.use(rollbar.errorHandler())
+
+const port = process.env.PORT || 4545
 
 app.listen(port, () => console.log(`Take us to warp ${port}!`))
